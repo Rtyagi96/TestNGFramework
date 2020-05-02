@@ -1,0 +1,44 @@
+package Framework.helper.browserConfig;
+
+import Framework.helper.resource.ResourceHelper;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+public class FirefoxBrowser {
+    public FirefoxOptions getFirefoxOptions() {
+        DesiredCapabilities firefox = DesiredCapabilities.firefox();
+
+        FirefoxProfile profile = new FirefoxProfile();
+        profile.setAcceptUntrustedCertificates(true);
+        profile.setAssumeUntrustedCertificateIssuer(true);
+        firefox.setCapability(FirefoxDriver.PROFILE, profile);
+        firefox.setCapability("marionette",true);
+
+        FirefoxOptions firefoxOptions = new FirefoxOptions(firefox);
+        //Linux
+
+        if (System.getProperty("os.name").contains("Linux")) {
+            firefoxOptions.addArguments("--headless", "windows-size=1028,768", "--no sandbox");
+        }
+        return firefoxOptions;
+    }
+    public WebDriver getFirefoxDriver(FirefoxOptions cap){
+        if(System.getProperty("os.name").contains("Mac")){
+            System.setProperty("webdriver.gecko.drive", ResourceHelper.getResourcePath("/src/main/driver/geckodriver"));
+            return new FirefoxDriver(cap);
+        }
+        else if (System.getProperty("os.name").contains("window")){
+            System.setProperty("webdriver.gecko.drive", ResourceHelper.getResourcePath("//src//main//driver//geckodriver.exe"));
+            return new FirefoxDriver(cap);
+        }
+        else if (System.getProperty("os.name").contains("Linux")){
+            System.setProperty("webdriver.gecko.driver",ResourceHelper.getResourcePath("/usr/bin/geckodriver"));
+            return new FirefoxDriver(cap);
+        }
+        return null;
+    }
+}
+
